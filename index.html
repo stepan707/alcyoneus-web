@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,11 +32,11 @@
             <h1 class="sci-fi-font text-4xl md:text-6xl font-bold tracking-widest uppercase mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
                 Alcyoneus
             </h1>
-            <p class="sci-fi-font text-xl text-blue-300 opacity-80 italic">Síň slávy galaxie</p>
+            <p class="sci-fi-font text-xl text-blue-300 opacity-80 italic">Galactic Hall of Fame</p>
         </header>
 
         <div id="podium" class="flex flex-col md:flex-row items-end justify-center gap-4 mb-12 min-h-[200px]">
-            <p class="text-center w-full opacity-50 animate-pulse">Navazuji spojení se Supabase...</p>
+            <p class="text-center w-full opacity-50 animate-pulse">Establishing uplink to Supabase...</p>
         </div>
 
         <div id="error-msg" class="hidden bg-red-900/50 border border-red-500 text-red-200 p-4 rounded mb-8 text-center"></div>
@@ -47,8 +47,8 @@
                     <tr>
                         <th class="p-4">#</th>
                         <th class="p-4">Pilot</th>
-                        <th class="p-4 text-right">Skóre</th>
-                        <th class="p-4 text-right hidden md:table-cell">Datum</th>
+                        <th class="p-4 text-right">Score</th>
+                        <th class="p-4 text-right hidden md:table-cell">Date</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboard-body">
@@ -84,13 +84,13 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP chyba! Status: ${response.status}`);
+                    throw new Error(`HTTP Error! Status: ${response.status}`);
                 }
 
                 const data = await response.json();
 
                 const cleanData = data.map(item => ({
-                    username: item.profiles ? item.profiles.username : 'Neznámý pilot',
+                    username: item.profiles ? item.profiles.username : 'Unknown Pilot',
                     score: item.score,
                     date: item.played_at
                 }));
@@ -99,13 +99,13 @@
                 errorMsgEl.classList.add('hidden');
 
             } catch (error) {
-                console.error('Chyba při načítání:', error);
+                console.error('Fetch error:', error);
                 const podiumEl = document.getElementById('podium');
                 
                 // Pokud je podium prázdné nebo tam je 'Navazuji...', vypíšeme chybu
-                if (podiumEl.innerText.includes("Navazuji")) {
+                if (podiumEl.innerText.includes("uplink")) {
                     podiumEl.innerHTML = '';
-                    errorMsgEl.textContent = `Nepodařilo se připojit k databázi. Pokud toto vidíte v náhledu, je to normální (náhled blokuje připojení). Otevřete soubor na GitHub Pages.`;
+                    errorMsgEl.textContent = `Connection Failed. If you see this in preview, it is normal (preview blocks connection). Open file via GitHub Pages.`;
                     errorMsgEl.classList.remove('hidden');
                 }
             }
@@ -120,7 +120,7 @@
             bodyEl.innerHTML = '';
 
             if (players.length === 0) {
-                podiumEl.innerHTML = '<p class="text-center w-full sci-fi-font text-xl">Žádná data v sektoru.</p>';
+                podiumEl.innerHTML = '<p class="text-center w-full sci-fi-font text-xl">No data found in this sector.</p>';
                 return;
             }
 
@@ -153,7 +153,8 @@
 
             const rest = players.slice(3);
             rest.forEach((player, i) => {
-                const date = new Date(player.date).toLocaleDateString('cs-CZ');
+                // Použijeme 'en-GB' pro formát DD/MM/YYYY nebo 'en-US' pro MM/DD/YYYY
+                const date = new Date(player.date).toLocaleDateString('en-GB');
                 bodyEl.innerHTML += `
                     <tr class="border-t border-white/5 hover:bg-white/10 transition-colors duration-200">
                         <td class="p-4 opacity-50 font-mono w-12 text-center">${i + 4}.</td>
