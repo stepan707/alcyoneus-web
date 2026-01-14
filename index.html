@@ -62,23 +62,24 @@
     </div>
 
     <script>
-        // --- 1. KONFIGURACE ---
+        // --- KONFIGURACE ---
         const SUPABASE_URL = 'https://kszubcxejomdsmoahnxc.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzenViY3hlam9tZHNtb2FobnhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg3MjIzMTQsImV4cCI6MjA3NDI5ODMxNH0.CJ5pod2xEpMurg9EY6qhP-O-gFl7rK1UJJX337-w99M';
         
-        // --- 2. NAČTENÍ DAT ---
+        // --- NAČTENÍ DAT ---
         async function fetchLeaderboard() {
             const errorMsgEl = document.getElementById('error-msg');
             
             try {
+                // Sestavení URL
                 const url = `${SUPABASE_URL}/rest/v1/high_scores?select=score,played_at,profiles(username)&order=score.desc&limit=20`;
                 
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: {
                         'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                        // Odstranil jsem Content-Type pro GET požadavek, aby to méně dráždilo CORS
                     }
                 });
 
@@ -100,14 +101,17 @@
             } catch (error) {
                 console.error('Chyba při načítání:', error);
                 const podiumEl = document.getElementById('podium');
-                podiumEl.innerHTML = '';
                 
-                errorMsgEl.textContent = `Chyba spojení: ${error.message}. Zkontrolujte konzoli.`;
-                errorMsgEl.classList.remove('hidden');
+                // Pokud je podium prázdné nebo tam je 'Navazuji...', vypíšeme chybu
+                if (podiumEl.innerText.includes("Navazuji")) {
+                    podiumEl.innerHTML = '';
+                    errorMsgEl.textContent = `Nepodařilo se připojit k databázi. Pokud toto vidíte v náhledu, je to normální (náhled blokuje připojení). Otevřete soubor na GitHub Pages.`;
+                    errorMsgEl.classList.remove('hidden');
+                }
             }
         }
 
-        // --- 3. VYKRESLENÍ ---
+        // --- VYKRESLENÍ ---
         function renderLeaderboard(players) {
             const podiumEl = document.getElementById('podium');
             const bodyEl = document.getElementById('leaderboard-body');
@@ -161,7 +165,6 @@
             });
         }
 
-        // --- 4. START A INTERVAL ---
         fetchLeaderboard();
         setInterval(fetchLeaderboard, 30000);
     </script>
