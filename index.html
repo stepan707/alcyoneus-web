@@ -62,16 +62,13 @@
     </div>
 
     <script>
-        // --- KONFIGURACE ---
         const SUPABASE_URL = 'https://kszubcxejomdsmoahnxc.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzenViY3hlam9tZHNtb2FobnhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg3MjIzMTQsImV4cCI6MjA3NDI5ODMxNH0.CJ5pod2xEpMurg9EY6qhP-O-gFl7rK1UJJX337-w99M';
         
-        // --- NAČTENÍ DAT ---
         async function fetchLeaderboard() {
             const errorMsgEl = document.getElementById('error-msg');
             
             try {
-                // Sestavení URL
                 const url = `${SUPABASE_URL}/rest/v1/high_scores?select=score,played_at,profiles(username)&order=score.desc&limit=20`;
                 
                 const response = await fetch(url, {
