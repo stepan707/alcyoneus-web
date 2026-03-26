@@ -80,7 +80,6 @@
                 });
 
                 if (!response.ok) {
-                    // Zkusíme přečíst detail chyby ze serveru
                     const errorText = await response.text();
                     throw new Error(`Server Error ${response.status}: ${errorText}`);
                 }
@@ -100,17 +99,14 @@
                 console.error('Fetch error:', error);
                 const podiumEl = document.getElementById('podium');
                 
-                // Pokud je podium prázdné nebo se načítá, zobrazíme chybu
                 if (podiumEl.innerText.includes("uplink")) {
                     podiumEl.innerHTML = '';
-                    // Vypíšeme PŘESNOU chybu
                     errorMsgEl.textContent = `Connection Failed: ${error.message}`;
                     errorMsgEl.classList.remove('hidden');
                 }
             }
         }
 
-        // --- VYKRESLENÍ ---
         function renderLeaderboard(players) {
             const podiumEl = document.getElementById('podium');
             const bodyEl = document.getElementById('leaderboard-body');
