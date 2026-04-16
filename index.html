@@ -69,7 +69,7 @@
             const errorMsgEl = document.getElementById('error-msg');
             
             try {
-                const url = `${SUPABASE_URL}/rest/v1/high_scores?select=score,played_at,profiles(username)&order=score.desc&limit=100`;
+                const url = `${SUPABASE_URL}/rest/v1/high_scores?select=score,played_at,profiles(username)&order=score.desc&limit=1000`;
                 
                 const response = await fetch(url, {
                     method: 'GET',
